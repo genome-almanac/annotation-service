@@ -10,7 +10,7 @@ export async function selectCytobands(assembly: string, parameters: CytobandPara
 				      db: IDatabase<any>): Promise<CytobandResult[]> {
     const tableName = "cytobands_" + assembly;
     const whereclause: string = ' ' + whereClause(cytobandConditions(parameters, "cytoband_table"));
-    const orderBy = " ORDER BY chromosome, bandname";
+    const orderBy = " ORDER BY chromosome, startcoordinate";
     const limit: string = parameters.limit ? ` LIMIT ${parameters.limit}` : "";
     const offset: string = parameters.offset ? ` OFFSET ${parameters.offset}` : "";
     return db.any(SELECT + " FROM ${tableName~} AS cytoband_table WHERE " + whereclause + orderBy + limit + offset,

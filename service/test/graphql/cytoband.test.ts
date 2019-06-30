@@ -137,11 +137,11 @@ describe("cytoband query", () => {
 	expect(response.body.data.cytoband).toContainEqual({
 	    coordinates: {
 		chromosome: "chr1",
-		start: 120400000,
-		end: 121700000
+		start: 2300000,
+		end: 5300000
 	    },
-	    bandname: "p11.2",
-	    stain: "gneg"
+	    bandname: "p36.32",
+	    stain: "gpos25"
 	});
     });
 

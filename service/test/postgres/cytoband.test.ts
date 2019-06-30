@@ -56,11 +56,11 @@ describe("cytoband queries", () => {
 	const results = await selectCytobands("hg38", parameters, db);
 	expect(results.length).toBe(1);
 	expect(results).toContainEqual({
+	    bandname: "p36.32",
 	    chromosome: "chr1",
-	    start: 120400000,
-	    stop: 121700000,
-	    bandname: "p11.2",
-	    stain: "gneg"
+	    stain: "gpos25",
+	    start: 2300000,
+	    stop: 5300000
 	});
     });
 
