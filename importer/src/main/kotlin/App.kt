@@ -29,6 +29,7 @@ class Cli : CliktCommand() {
     private val assemblies by option("--assemblies",
             envvar = "ASSEMBLIES",
             help = "Assemblies for which to import annotations.")
+	    .withEnvvarSplit(Regex.fromLiteral("|"))
             .multiple()
     private val cytobandFiles by option("--cytoband-files",
             envvar = "CYTOBAND_FILES",
