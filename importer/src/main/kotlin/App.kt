@@ -29,8 +29,16 @@ class Cli : CliktCommand() {
     private val assemblies by option("--assemblies",
             envvar = "ASSEMBLIES",
             help = "Assemblies for which to import annotations.")
-            .withEnvvarSplit(Regex.fromLiteral("|"))
             .multiple()
+    private val cytobandFiles by option("--cytoband-files",
+            envvar = "CYTOBAND_FILES",
+	    help = "Local cytoband files to import, with associated assemblies")
+	    .file(exists = true)
+	    .multiple()
+    private val cytobandFileAssemblies by option("--cytoband-file-assemblies",
+            envvar = "CYTOBAND_FILE_ASSEMBLIES",
+	    help = "Local cytoband file assemblies")
+	    .multiple()
     private val replaceSchema by option("--replace-schema", envvar = "REPLACE_SCHEMA",
             help = "Set to drop the given schema first before creating it again.")
             .flag(default = false)
@@ -42,6 +50,9 @@ class Cli : CliktCommand() {
         val cytobandSources = mutableListOf<CytobandSource>()
 	for (assembly in assemblies) {
 	    cytobandSources += UCSCCytobandHttpSource(assembly)
+	}
+	cytobandFiles.forEachIndexed { index, file ->
+	    cytobandSources += CytobandFileSource(cytobandFileAssemblies[index], file)
 	}
 	importers += CytobandImporter(cytobandSources)
 	

@@ -37,6 +37,7 @@ private fun cytobandsTableDef(assembly: String): String =
 class CytobandSink(dataSource: DataSource, assembly: String): Closeable {
 
     private val cytobandOut = CopyStreamWriter(dataSource, cytobandsTableDef(assembly))
+    private val tabledef = cytobandsTableDef(assembly)
 
     fun write(cytoband: InputStream) {
 	cytobandOut.write(cytoband)
