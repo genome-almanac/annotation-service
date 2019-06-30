@@ -39,7 +39,7 @@ if ! kubectl get secret annotations-db-credentials &>/dev/null ; then
     echo "Creating annotations-db-credentials secret..."
     DB_USERNAME=$(jq -r ".annotations_db_username" /tmp/devops/staging-db-credentials/annotations-db.json)
     DB_PASSWORD=$(jq -r ".annotations_db_password" /tmp/devops/staging-db-credentials/annotations-db.json)
-    kubectl create secret annotationric annotations-db-credentials \
+    kubectl create secret generic annotations-db-credentials \
         --from-literal=username=$DB_USERNAME \
         --from-literal=password=$DB_PASSWORD
 else
