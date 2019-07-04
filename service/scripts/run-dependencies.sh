@@ -28,6 +28,8 @@ java -jar ../importer/build/annotations-importer-*.jar \
     --db-schema $POSTGRES_SCHEMA \
     --cytoband-files test-resources/cytoBand.hg38.txt.gz \
     --cytoband-file-assemblies hg38 \
+    --chrom-length-files test-resources/chromInfo.hg38.txt.gz \
+    --chrom-length-file-assemblies hg38 \
     --assembly-files test-resources/downloads.html \
     --replace-schema
 

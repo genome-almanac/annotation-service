@@ -41,12 +41,12 @@ class Cli : CliktCommand() {
             envvar = "CYTOBAND_FILE_ASSEMBLIES",
 	    help = "Local cytoband file assemblies")
 	    .multiple()
-    private val chromLengthFiles by option("--chromlength-files",
+    private val chromLengthFiles by option("--chrom-length-files",
             envvar = "CHROM_LENGTH_FILES",
 	    help = "Local chrom length files to import, with associated assemblies")
 	    .file(exists = true)
 	    .multiple()
-    private val chromLengthFileAssemblies by option("--chromlength-file-assemblies",
+    private val chromLengthFileAssemblies by option("--chrom-length-file-assemblies",
             envvar = "CHROM_LENGTH_FILE_ASSEMBLIES",
 	    help = "Local chrom length file assemblies")
 	    .multiple()

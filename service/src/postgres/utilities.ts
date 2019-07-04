@@ -1,4 +1,4 @@
-import { CytobandParameters, AssemblyParameters } from './types';
+import { CytobandParameters, AssemblyParameters, ChromLengthParameters } from './types';
 
 const CYTOBAND_PARAMETERS: { [key: string]: (tableName: string) => string } = {
     coordinates: (tableName: string): string => (
@@ -13,6 +13,12 @@ const CYTOBAND_PARAMETERS: { [key: string]: (tableName: string) => string } = {
     chromosome: (tableName: string): string => tableName + ".chromosome = ${" + tableName + ".chromosome}",
     bandname: (tableName: string): string => tableName + ".bandname = ANY(${" + tableName + ".bandname})",
     stain: (tableName: string): string => tableName + ".stain = ANY(${" + tableName + ".stain})"
+};
+
+const CHROM_LENGTH_PARAMETERS: { [key: string]: (tableName: string) => string } = {
+    chromosome: (tableName: string): string => tableName + ".chromosome = ${" + tableName + ".chromosome}",
+    minLength: (tableName: string): string => tableName + ".length >= ${" + tableName + ".minLength}",
+    maxLength: (tableName: string): string => tableName + ".length <= ${" + tableName + ".maxLength}"
 };
 
 const ASSEMBLY_PARAMETERS: { [key: string]: (tableName: string) => string } = {
@@ -48,4 +54,11 @@ export function assemblyConditions(parameters: AssemblyParameters,
     return Object.keys(parameters)
 	.filter(key => ASSEMBLY_PARAMETERS[key] !== undefined && parameters[key] !== undefined)
 	.map(key => ASSEMBLY_PARAMETERS[key](tableName));
+}
+
+export function chromLengthConditions(parameters: ChromLengthParameters,
+				   tableName: string): string[] {
+    return Object.keys(parameters)
+	.filter(key => CHROM_LENGTH_PARAMETERS[key] !== undefined && parameters[key] !== undefined)
+	.map(key => CHROM_LENGTH_PARAMETERS[key](tableName));
 }

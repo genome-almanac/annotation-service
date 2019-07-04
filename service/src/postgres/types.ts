@@ -31,3 +31,16 @@ export interface AssemblyResult {
     species: string;
     description: string;
 };
+
+export interface ChromLengthParameters {
+    chromosome?: string;
+    minLength?: number;
+    maxLength?: number;
+    assembly: string;
+    [key: string]: any;
+};
+
+export interface ChromLengthResult {
+    chromosome: string;
+    length: number;
+};
