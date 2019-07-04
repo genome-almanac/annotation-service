@@ -25,7 +25,14 @@ fun databaseUrl(ucscBaseUrl: String, assembly: String): String {
 
 fun requestUCSCCytoband(ucscBaseUrl: String, assembly: String): InputStream {
     var assemblyUrl = databaseUrl(ucscBaseUrl, assembly)
-    var experimentUrl = HttpUrl.parse("$assemblyUrl/cytoBand.txt.gz")!!.newBuilder().build()
-    var request = Request.Builder().url(experimentUrl).get().build()
+    var fileUrl = HttpUrl.parse("$assemblyUrl/cytoBand.txt.gz")!!.newBuilder().build()
+    var request = Request.Builder().url(fileUrl).get().build()
+    return http.newCall(request).execute().body()!!.byteStream()
+}
+
+fun requestUCSCChromLengths(ucscBaseUrl: String, assembly: String): InputStream {
+    var assemblyUrl = databaseUrl(ucscBaseUrl, assembly)
+    var fileUrl = HttpUrl.parse("$assemblyUrl/chromInfo.txt.gz")!!.newBuilder().build()
+    var request = Request.Builder().url(fileUrl).get().build()
     return http.newCall(request).execute().body()!!.byteStream()
 }

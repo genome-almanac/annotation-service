@@ -16,7 +16,7 @@ const val DB_USERNAME = "postgres"
 class AppTest : StringSpec() {
 
     override fun afterTest(description: Description, result: TestResult) {
-        executeAdminUpdates("DROP SCHEMA $TEST_SCHEMA CASCADE")
+        executeAdminUpdates("DROP SCHEMA IF EXISTS $TEST_SCHEMA CASCADE")
     }
 
     init {
@@ -64,6 +64,47 @@ class AppTest : StringSpec() {
                 result.getInt("endcoordinate") shouldBe 2300000
 		result.getString("stain") shouldBe "gneg"
 		result.getString("bandname") shouldBe "p36.33"
+            }
+
+        }
+
+        "a chrom lengths file should import" {
+
+            val testAnnotationFile = File(AppTest::class.java.getResource("chromInfo.hg38.txt.gz").file)
+            val fileSource = ChromLengthFileSource("hg38", testAnnotationFile)
+            val chromLengthImporter = ChromLengthImporter(listOf(fileSource))
+            runImporters(DB_URL, DB_USERNAME, dbSchema = TEST_SCHEMA, replaceSchema = true, importers = listOf(chromLengthImporter))
+
+            checkQuery("SELECT COUNT(*) FROM chrom_length_hg38") { result ->
+                result.next()
+                result.getInt(1) shouldBe 595
+            }
+            checkQuery("SELECT * FROM chrom_length_hg38 WHERE chromosome = 'chr1' LIMIT 1") { result ->
+                result.next()
+		result.getString("chromosome") shouldBe("chr1")
+		result.getInt("length") shouldBe 248_956_422
+            }
+
+        }
+
+        "a chrom lengths file should import over HTTP" {
+
+            val server = MockWebServer()
+            server.start()
+            val baseUrl = server.url("").toString()
+            server.queueBytesFromResource("chromInfo.hg38.txt.gz")
+            val chromLengthSource = UCSCChromLengthHttpSource("hg38", false, "$baseUrl")
+            val chromLengthImporter = ChromLengthImporter(listOf(chromLengthSource))
+            runImporters(DB_URL, DB_USERNAME, dbSchema = TEST_SCHEMA, replaceSchema = true, importers = listOf(chromLengthImporter))
+
+	    checkQuery("SELECT COUNT(*) FROM chrom_length_hg38") { result ->
+                result.next()
+                result.getInt(1) shouldBe 595
+            }
+            checkQuery("SELECT * FROM chrom_length_hg38 WHERE chromosome = 'chr1' LIMIT 1") { result ->
+                result.next()
+		result.getString("chromosome") shouldBe("chr1")
+		result.getInt("length") shouldBe 248_956_422
             }
 
         }

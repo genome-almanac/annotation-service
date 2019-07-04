@@ -41,6 +41,15 @@ class Cli : CliktCommand() {
             envvar = "CYTOBAND_FILE_ASSEMBLIES",
 	    help = "Local cytoband file assemblies")
 	    .multiple()
+    private val chromLengthFiles by option("--chromlength-files",
+            envvar = "CHROM_LENGTH_FILES",
+	    help = "Local chrom length files to import, with associated assemblies")
+	    .file(exists = true)
+	    .multiple()
+    private val chromLengthFileAssemblies by option("--chromlength-file-assemblies",
+            envvar = "CHROM_LENGTH_FILE_ASSEMBLIES",
+	    help = "Local chrom length file assemblies")
+	    .multiple()
     private val replaceSchema by option("--replace-schema", envvar = "REPLACE_SCHEMA",
             help = "Set to drop the given schema first before creating it again.")
             .flag(default = false)
@@ -60,6 +69,7 @@ class Cli : CliktCommand() {
 	var assemblySources: List<AssemblySource> = localAssemblies.map { AssemblyMapSource(it) }
 	assemblySources += AssemblyMapSource(databaseAssemblies)
 	val assemblyImporter = AssemblyImporter(assemblySources)
+        importers += assemblyImporter
 
         val cytobandSources = mutableListOf<CytobandSource>()
 	for (assembly in assemblies) {
@@ -74,7 +84,20 @@ class Cli : CliktCommand() {
             }
 	}
 	importers += CytobandImporter(cytobandSources)
-	importers += assemblyImporter
+
+        val chromLengthSources = mutableListOf<ChromLengthSource>()
+	for (assembly in assemblies) {
+	    chromLengthSources += UCSCChromLengthHttpSource(assembly)
+	}
+	chromLengthFiles.forEachIndexed { index, file ->
+	    chromLengthSources += ChromLengthFileSource(chromLengthFileAssemblies[index], file)
+	}
+	databaseAssemblies.forEach { _, assemblies ->
+	    assemblies.forEach {
+	        chromLengthSources += UCSCChromLengthHttpSource(it["name"]!!, true)
+            }
+	}
+	importers += ChromLengthImporter(chromLengthSources)
 	
         runImporters(dbUrl, dbUsername, dbPassword, dbSchema, replaceSchema, importers)
 	
