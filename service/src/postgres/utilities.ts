@@ -18,11 +18,11 @@ const CYTOBAND_PARAMETERS: { [key: string]: (tableName: string) => string } = {
 const ASSEMBLY_PARAMETERS: { [key: string]: (tableName: string) => string } = {
     name: (tableName: string): string => tableName + ".name ILIKE '${" + tableName + ".name#}%'",
     description: (tableName: string): string => tableName + ".description ILIKE '${" + tableName + ".description#}%'",
-    species: (tableName: string): string => tableName + ".species ILIKE '${" + tableName + ".species#}%'",
+    species: (tableName: string): string => tableName + ".species ILIKE '%${" + tableName + ".species#}%'",
     searchTerm: (tableName: string): string => (
 	tableName + ".name ILIKE '${" + tableName + ".searchTerm#}%' OR "
 	    + tableName + ".description ILIKE '${" + tableName + ".searchTerm#}%' OR "
-	    + tableName + ".species ILIKE '${" + tableName + ".searchTerm#}%'"
+	    + tableName + ".species ILIKE '%${" + tableName + ".searchTerm#}%'"
     )
 };
 
