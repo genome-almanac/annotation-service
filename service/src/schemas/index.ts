@@ -1,6 +1,7 @@
 import { gql, makeExecutableSchema } from 'apollo-server-express';
 import { cytobandResolvers } from '../resolvers/cytoband';
 import { assemblyResolvers } from '../resolvers/assembly';
+import { chromLengthResolvers } from '../resolvers/chromlength';
 
 const typeDefs = gql`
     type Cytoband {
@@ -24,7 +25,8 @@ const typeDefs = gql`
     type Query {
         cytoband(assembly: String!, chromosome: String, coordinates: GenomicRangeInput,
                  stain: [String], bandname: [String], limit: Int, offset: Int): [Cytoband],
-        assemblies(name: String, species: String, description: String, searchTerm: String): [Assembly]
+        assemblies(name: String, species: String, description: String, searchTerm: String): [Assembly],
+        chromlengths(assembly: String!, chromosome: String, minLength: Int, maxLength: Int): [ChromLength]
     }
 
     type Assembly {
@@ -32,9 +34,14 @@ const typeDefs = gql`
         species: String!,
         description: String!
     }
+
+    type ChromLength {
+        chromosome: String!,
+        length: Int!
+    }
 `;
 
 export const schema = makeExecutableSchema({
     typeDefs,
-    resolvers: [cytobandResolvers, assemblyResolvers]
+    resolvers: [cytobandResolvers, assemblyResolvers, chromLengthResolvers]
 });
