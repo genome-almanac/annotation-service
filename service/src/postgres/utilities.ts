@@ -1,4 +1,4 @@
-import { CytobandParameters } from './types';
+import { CytobandParameters, AssemblyParameters } from './types';
 
 const CYTOBAND_PARAMETERS: { [key: string]: (tableName: string) => string } = {
     coordinates: (tableName: string): string => (
@@ -13,6 +13,17 @@ const CYTOBAND_PARAMETERS: { [key: string]: (tableName: string) => string } = {
     chromosome: (tableName: string): string => tableName + ".chromosome = ${" + tableName + ".chromosome}",
     bandname: (tableName: string): string => tableName + ".bandname = ANY(${" + tableName + ".bandname})",
     stain: (tableName: string): string => tableName + ".stain = ANY(${" + tableName + ".stain})"
+};
+
+const ASSEMBLY_PARAMETERS: { [key: string]: (tableName: string) => string } = {
+    name: (tableName: string): string => tableName + ".name ILIKE '${" + tableName + ".name#}%'",
+    description: (tableName: string): string => tableName + ".description ILIKE '${" + tableName + ".description#}%'",
+    species: (tableName: string): string => tableName + ".species ILIKE '${" + tableName + ".species#}%'",
+    searchTerm: (tableName: string): string => (
+	tableName + ".name ILIKE '${" + tableName + ".searchTerm#}%' OR "
+	    + tableName + ".description ILIKE '${" + tableName + ".searchTerm#}%' OR "
+	    + tableName + ".species ILIKE '${" + tableName + ".searchTerm#}%'"
+    )
 };
 
 export function parenthesisWrap(text: string): string {
@@ -30,4 +41,11 @@ export function cytobandConditions(parameters: CytobandParameters,
     return Object.keys(parameters)
 	.filter(key => CYTOBAND_PARAMETERS[key] !== undefined && parameters[key] !== undefined)
 	.map(key => CYTOBAND_PARAMETERS[key](tableName));
+}
+
+export function assemblyConditions(parameters: AssemblyParameters,
+				   tableName: string): string[] {
+    return Object.keys(parameters)
+	.filter(key => ASSEMBLY_PARAMETERS[key] !== undefined && parameters[key] !== undefined)
+	.map(key => ASSEMBLY_PARAMETERS[key](tableName));
 }

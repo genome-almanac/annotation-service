@@ -1,6 +1,8 @@
 package util
 
 import org.jsoup.*
+import org.jsoup.nodes.*
+import java.io.File
 
 fun shortName(name: String): String {
     var tsplit = "/"
@@ -13,12 +15,20 @@ fun shortName(name: String): String {
     return nsplit.split(")")[0].replace(" ", "_")
 }
 
-fun parseUcscList(url: String): Map<String, List<Map<String, String>>> {
+fun parseUcscFile(input: File): Map<String, List<Map<String, String>>> {
+    return parseUcsc(Jsoup.parse(input, "UTF-8", ""))
+}
 
-    val retval: MutableMap<String, MutableList<Map<String, String>>> = mutableMapOf()
+fun parseUcscList(url: String): Map<String, List<Map<String, String>>> {
     val doc = Jsoup.connect(url).timeout(30000).get()
+    return parseUcsc(doc)
+}
+
+fun parseUcsc(doc: Document): Map<String, List<Map<String, String>>> {
+
     var currentspecies: String = ""
     var currentassembly = ""
+    var retval: MutableMap<String, MutableList<Map<String, String>>> = mutableMapOf();
 
     doc.select(".gbsPage:first-of-type *").forEach {
         val tagName = it.tagName()

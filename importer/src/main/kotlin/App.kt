@@ -46,13 +46,19 @@ class Cli : CliktCommand() {
             .flag(default = false)
     private val listUrl by option("--list-url", envvar = "LIST_URL",
             help = "Pass to import a list of assemblies from UCSC.")
+    private val assemblyFiles by option("--assembly-files", envvar = "ASSEMBLY_FILES",
+            help = "Pass to import a list of assemblies from a local file.")
+	    .file(exists = true)
+	    .multiple()
 
     override fun run() {
 
         val importers = mutableListOf<Importer>()
 
         val databaseAssemblies: Map<String, List<Map<String, String>>> = if (listUrl !== null) parseUcscList(listUrl!!) else mapOf()
-	val assemblySources: List<AssemblySource> = listOf(AssemblyMapSource(databaseAssemblies))
+	val localAssemblies: List<Map<String, List<Map<String, String>>>> = assemblyFiles.map { parseUcscFile(it) }
+	var assemblySources: List<AssemblySource> = localAssemblies.map { AssemblyMapSource(it) }
+	assemblySources += AssemblyMapSource(databaseAssemblies)
 	val assemblyImporter = AssemblyImporter(assemblySources)
 
         val cytobandSources = mutableListOf<CytobandSource>()

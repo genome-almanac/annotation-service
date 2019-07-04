@@ -17,3 +17,17 @@ export interface CytobandResult {
     stop: number;
     stain: string;
 };
+
+export interface AssemblyParameters {
+    name?: string;
+    species?: string;
+    description?: string;
+    searchTerm?: string;
+    [key: string]: any;
+};
+
+export interface AssemblyResult {
+    name: string;
+    species: string;
+    description: string;
+};

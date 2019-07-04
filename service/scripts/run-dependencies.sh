@@ -28,6 +28,7 @@ java -jar ../importer/build/annotations-importer-*.jar \
     --db-schema $POSTGRES_SCHEMA \
     --cytoband-files test-resources/cytoBand.hg38.txt.gz \
     --cytoband-file-assemblies hg38 \
+    --assembly-files test-resources/downloads.html \
     --replace-schema
 
 echo "Dependencies started successfully!"
