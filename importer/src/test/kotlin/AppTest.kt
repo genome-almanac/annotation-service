@@ -49,7 +49,7 @@ class AppTest : StringSpec() {
             server.start()
             val baseUrl = server.url("").toString()
             server.queueBytesFromResource("cytoBand.hg19.txt.gz")
-            val cytobandSource = UCSCCytobandHttpSource("hg19", "$baseUrl")
+            val cytobandSource = UCSCCytobandHttpSource("hg19", false, "$baseUrl")
             val cytobandImporter = CytobandImporter(listOf(cytobandSource))
             runImporters(DB_URL, DB_USERNAME, dbSchema = TEST_SCHEMA, replaceSchema = true, importers = listOf(cytobandImporter))
 
@@ -64,6 +64,23 @@ class AppTest : StringSpec() {
                 result.getInt("endcoordinate") shouldBe 2300000
 		result.getString("stain") shouldBe "gneg"
 		result.getString("bandname") shouldBe "p36.33"
+            }
+
+        }
+
+        "dm6 cytoband file should import over HTTP" {
+
+            val server = MockWebServer()
+            server.start()
+            val baseUrl = server.url("").toString()
+            server.queueBytesFromResource("cytoBand.dm6.txt.gz")
+            val cytobandSource = UCSCCytobandHttpSource("dm6", false, "$baseUrl")
+            val cytobandImporter = CytobandImporter(listOf(cytobandSource))
+            runImporters(DB_URL, DB_USERNAME, dbSchema = TEST_SCHEMA, replaceSchema = true, importers = listOf(cytobandImporter))
+
+	    checkQuery("SELECT COUNT(*) FROM cytobands_dm6") { result ->
+                result.next()
+                result.getInt(1) shouldBe 6917
             }
 
         }

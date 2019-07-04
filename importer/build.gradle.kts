@@ -21,6 +21,7 @@ dependencies {
     implementation("com.squareup.okhttp3", "okhttp", "3.12.1")
     implementation("com.squareup.moshi", "moshi-kotlin", "1.8.0")
     implementation("com.squareup.moshi", "moshi-adapters", "1.8.0")
+    implementation("org.jsoup", "jsoup", "1.11.3")
     compile("org.postgresql", "postgresql", "42.2.2")
     compile("com.zaxxer", "HikariCP", "3.3.0")
     compile("com.github.ajalt", "clikt", "1.6.0")

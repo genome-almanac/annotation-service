@@ -4,6 +4,7 @@ import com.github.ajalt.clikt.parameters.types.file
 import com.github.ajalt.clikt.parameters.types.int
 import import.*
 import source.*
+import util.*
 import com.zaxxer.hikari.*
 import javax.sql.DataSource
 import java.sql.DriverManager
@@ -43,10 +44,16 @@ class Cli : CliktCommand() {
     private val replaceSchema by option("--replace-schema", envvar = "REPLACE_SCHEMA",
             help = "Set to drop the given schema first before creating it again.")
             .flag(default = false)
+    private val listUrl by option("--list-url", envvar = "LIST_URL",
+            help = "Pass to import a list of assemblies from UCSC.")
 
     override fun run() {
 
         val importers = mutableListOf<Importer>()
+
+        val databaseAssemblies: Map<String, List<Map<String, String>>> = if (listUrl !== null) parseUcscList(listUrl!!) else mapOf()
+	val assemblySources: List<AssemblySource> = listOf(AssemblyMapSource(databaseAssemblies))
+	val assemblyImporter = AssemblyImporter(assemblySources)
 
         val cytobandSources = mutableListOf<CytobandSource>()
 	for (assembly in assemblies) {
@@ -55,7 +62,13 @@ class Cli : CliktCommand() {
 	cytobandFiles.forEachIndexed { index, file ->
 	    cytobandSources += CytobandFileSource(cytobandFileAssemblies[index], file)
 	}
+	databaseAssemblies.forEach { _, assemblies ->
+	    assemblies.forEach {
+	        cytobandSources += UCSCCytobandHttpSource(it["name"]!!, true)
+            }
+	}
 	importers += CytobandImporter(cytobandSources)
+	importers += assemblyImporter
 	
         runImporters(dbUrl, dbUsername, dbPassword, dbSchema, replaceSchema, importers)
 	

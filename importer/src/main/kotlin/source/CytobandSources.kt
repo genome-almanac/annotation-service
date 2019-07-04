@@ -12,6 +12,7 @@ import java.io.FileInputStream
 private val log = KotlinLogging.logger {}
 
 class UCSCCytobandHttpSource(private val assembly_: String,
+                             private val ignoreMissing: Boolean = false,
                              private val ucscBaseUrl: String = UCSC_BASE_URL) : CytobandSource {
 
     override fun assembly(): String {
@@ -19,8 +20,15 @@ class UCSCCytobandHttpSource(private val assembly_: String,
     }
 
     override fun import(sink: CytobandSink) {
-        val cytoband = GZIPInputStream(requestUCSCCytoband(ucscBaseUrl, assembly_))
-	writeCytobandsToDb(cytoband, sink)
+        if (!ignoreMissing) {
+            val cytoband = GZIPInputStream(requestUCSCCytoband(ucscBaseUrl, assembly_))
+	    writeCytobandsToDb(cytoband, sink)
+        } else {
+            try {
+                val cytoband = GZIPInputStream(requestUCSCCytoband(ucscBaseUrl, assembly_))
+	        writeCytobandsToDb(cytoband, sink)
+	    } catch (e: Exception) {}
+	}
     }
     
 }

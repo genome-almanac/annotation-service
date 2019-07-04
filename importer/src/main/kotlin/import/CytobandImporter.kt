@@ -15,10 +15,10 @@ class CytobandImporter(private val sources: List<CytobandSource>) : Importer {
 
 	for (source in sources) {
 	    val assembly = source.assembly()
+	    log.info { "Running cytoband schema for $assembly..." }
 	    val replacements = mapOf("\$ASSEMBLY" to assembly)
             executeSqlResource(dataSource, "schemas/cytoband.sql", replacements)
             CytobandSink(dataSource, assembly).use { sink ->
-	        log.info { "Running cytoband schema for $assembly..." }
                 source.import(sink)
             }
 	}

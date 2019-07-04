@@ -18,8 +18,8 @@ spec:
         env:
           - name: JVM_OPTS
             value: "-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
-          - name: ASSEMBLIES
-            value: hg38|hg19|mm10
+          - name: LIST_URL
+            value: "http://hgdownload.cse.ucsc.edu/downloads.html"
           - name: DB_SCHEMA
             value: "${DB_SCHEMA}"
           - name: DB_URL

@@ -24,8 +24,8 @@ fun databaseUrl(ucscBaseUrl: String, assembly: String): String {
 }
 
 fun requestUCSCCytoband(ucscBaseUrl: String, assembly: String): InputStream {
-    val assemblyUrl = databaseUrl(ucscBaseUrl, assembly)
-    val experimentUrl = HttpUrl.parse("$assemblyUrl/cytoBand.txt.gz")!!.newBuilder().build()
-    val request = Request.Builder().url(experimentUrl).get().build()
+    var assemblyUrl = databaseUrl(ucscBaseUrl, assembly)
+    var experimentUrl = HttpUrl.parse("$assemblyUrl/cytoBand.txt.gz")!!.newBuilder().build()
+    var request = Request.Builder().url(experimentUrl).get().build()
     return http.newCall(request).execute().body()!!.byteStream()
 }

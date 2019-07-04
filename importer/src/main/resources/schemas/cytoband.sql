@@ -4,5 +4,5 @@ CREATE TABLE IF NOT EXISTS cytobands_$ASSEMBLY (
     endcoordinate INT,
     bandname TEXT,
     stain TEXT,
-    CONSTRAINT cytobands_$ASSEMBLY_pkey PRIMARY KEY(chromosome, bandname)
+    CONSTRAINT cytobands_$ASSEMBLY_pkey PRIMARY KEY(chromosome, startcoordinate)
 );
