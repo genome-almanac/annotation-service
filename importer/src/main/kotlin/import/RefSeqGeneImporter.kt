@@ -18,7 +18,7 @@ class RefSeqGeneImporter(private val sources: List<RefSeqGeneSource>, private va
 	for (source in sources) {
 	    val assembly = source.assembly()
 	    log.info { "Running RefSeq gene schema for $assembly..." }
-	    val replacements = mapOf("\$ASSEMBLY" to assembly)
+	    val replacements = mapOf("\$ASSEMBLY" to (if (isXeno) assembly + "_xeno" else assembly))
             executeSqlResource(dataSource, "schemas/refgene.sql", replacements)
             RefSeqGeneSink(dataSource, assembly, isXeno).use { sink ->
                 source.import(sink)

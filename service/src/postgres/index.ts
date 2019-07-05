@@ -1,10 +1,12 @@
 import { db } from './connection';
 import { CytobandParameters, CytobandResult,
 	 AssemblyParameters, AssemblyResult,
-	 ChromLengthParameters, ChromLengthResult } from './types';
+	 ChromLengthParameters, ChromLengthResult,
+	 RefSeqGeneParameters, RefSeqGeneResult } from './types';
 import { selectCytobands } from './cytobands';
 import { selectAssemblies } from './assemblies';
 import { selectChromLengths } from './chromlengths';
+import { selectRefSeqGenes } from './refseqgenes';
 
 export {
     db,
@@ -16,5 +18,8 @@ export {
     AssemblyParameters,
     AssemblyResult,
     ChromLengthParameters,
-    ChromLengthResult
+    ChromLengthResult,
+    RefSeqGeneParameters,
+    RefSeqGeneResult,
+    selectRefSeqGenes
 };

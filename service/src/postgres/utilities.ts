@@ -1,15 +1,23 @@
-import { CytobandParameters, AssemblyParameters, ChromLengthParameters } from './types';
+import { CytobandParameters, AssemblyParameters,
+	 ChromLengthParameters, RefSeqGeneParameters } from './types';
+
+function coordinateParameters(startname: string = "startcoordinate",
+			      endname: string = "endcoordinate"): (tableName: string) => string {
+    return function(tableName: string): string {
+	return (
+	    "(("
+		+ tableName + "." + startname + " < ${" + tableName + ".coordinates.start} AND "
+		+ tableName + "." + endname + " > ${" + tableName + ".coordinates.start}) OR ("
+		+ tableName + "." + startname + " < ${" + tableName + ".coordinates.end} AND "
+		+ tableName + "." + endname + " > ${" + tableName + ".coordinates.end}) OR ("
+		+ tableName + "." + startname + " < ${" + tableName + ".coordinates.start} AND "
+		+ tableName + "." + endname + " > ${" + tableName + ".coordinates.end}))"
+	);
+    }
+}
 
 const CYTOBAND_PARAMETERS: { [key: string]: (tableName: string) => string } = {
-    coordinates: (tableName: string): string => (
-	"(("
-	    + tableName + ".startcoordinate < ${" + tableName + ".coordinates.start} AND "
-	    + tableName + ".endcoordinate > ${" + tableName + ".coordinates.start}) OR ("
-	    + tableName + ".startcoordinate < ${" + tableName + ".coordinates.end} AND "
-	    + tableName + ".endcoordinate > ${" + tableName + ".coordinates.end}) OR ("
-	    + tableName + ".startcoordinate < ${" + tableName + ".coordinates.start} AND "
-	    + tableName + ".endcoordinate > ${" + tableName + ".coordinates.end}))"
-    ),
+    coordinates: coordinateParameters(),
     chromosome: (tableName: string): string => tableName + ".chromosome = ${" + tableName + ".chromosome}",
     bandname: (tableName: string): string => tableName + ".bandname = ANY(${" + tableName + ".bandname})",
     stain: (tableName: string): string => tableName + ".stain = ANY(${" + tableName + ".stain})"
@@ -30,6 +38,16 @@ const ASSEMBLY_PARAMETERS: { [key: string]: (tableName: string) => string } = {
 	    + tableName + ".description ILIKE '${" + tableName + ".searchTerm#}%' OR "
 	    + tableName + ".species ILIKE '%${" + tableName + ".searchTerm#}%'"
     )
+};
+
+const REFSEQ_GENE_PARAMETERS: { [key: string]: (tableName: string) => string } = {
+    searchTerm: (tableName: string): string => (
+	tableName + ".name ILIKE '${" + tableName + ".searchTerm#}%' OR "
+	    + tableName + ".name2 ILIKE '${" + tableName + ".searchTerm#}%'"
+    ),
+    strand: (tableName: string): string => tableName + ".strand = ${" + tableName + ".strand}",
+    coordinates: coordinateParameters("txstart", "txend"),
+    chromosome: (tableName: string): string => tableName + ".chrom = ${" + tableName + ".chromosome}"
 };
 
 export function parenthesisWrap(text: string): string {
@@ -61,4 +79,13 @@ export function chromLengthConditions(parameters: ChromLengthParameters,
     return Object.keys(parameters)
 	.filter(key => CHROM_LENGTH_PARAMETERS[key] !== undefined && parameters[key] !== undefined)
 	.map(key => CHROM_LENGTH_PARAMETERS[key](tableName));
+}
+
+export function refSeqGeneConditions(parameters: RefSeqGeneParameters,
+				     tableName: string): string[] {
+    parameters.chromosome = parameters.chromosome || (parameters.coordinates && parameters.coordinates!.chromosome);
+    parameters.coordinates = parameters.coordinates && parameters.coordinates!.end ? parameters.coordinates : undefined;
+    return Object.keys(parameters)
+	.filter(key => REFSEQ_GENE_PARAMETERS[key] !== undefined && parameters[key] !== undefined)
+	.map(key => REFSEQ_GENE_PARAMETERS[key](tableName));
 }

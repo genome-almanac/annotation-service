@@ -44,3 +44,32 @@ export interface ChromLengthResult {
     chromosome: string;
     length: number;
 };
+
+export interface RefSeqGeneParameters {
+    coordinates?: GenomicRange;
+    chromosome?: string;
+    limit?: number;
+    offset?: number;
+    searchTerm?: string;
+    strand?: string;
+    [key: string]: any;
+};
+
+export interface RefSeqGeneResult {
+    bin: number;
+    name: string;
+    chrom: string;
+    strand: string;
+    txstart: number;
+    txend: number;
+    cdsstart: number;
+    cdsend: number;
+    exoncount: number;
+    exonstarts: number[];
+    exonends: number[];
+    score: number;
+    name2: string;
+    cdsstartstat: string;
+    cdsendstat: string;
+    exonframes: number[];
+};
