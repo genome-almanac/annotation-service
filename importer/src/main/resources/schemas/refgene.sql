@@ -14,6 +14,5 @@ CREATE TABLE IF NOT EXISTS refseq_gene_$ASSEMBLY (
     name2 TEXT,
     cdsstartstat TEXT,
     cdsendstat TEXT,
-    exonframes INT[],
-    CONSTRAINT refseq_gene_$ASSEMBLY_pkey PRIMARY KEY(bin, chrom, name, name2,  txstart)
+    exonframes INT[]
 );
