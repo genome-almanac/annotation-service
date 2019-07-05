@@ -109,6 +109,53 @@ class AppTest : StringSpec() {
 
         }
 
+        "a refGene file should import" {
+
+            val testAnnotationFile = File(AppTest::class.java.getResource("xenoRefGene.aplCal1.subsample.txt.gz").file)
+            val fileSource = RefSeqGeneFileSource("aplCal1", testAnnotationFile)
+            val refGeneImporter = RefSeqGeneImporter(listOf(fileSource))
+            runImporters(DB_URL, DB_USERNAME, dbSchema = TEST_SCHEMA, replaceSchema = true, importers = listOf(refGeneImporter))
+
+            checkQuery("SELECT COUNT(*) FROM refseq_gene_aplCal1") { result ->
+                result.next()
+                result.getInt(1) shouldBe 1000
+            }
+            checkQuery("SELECT * FROM refseq_gene_aplCal1 WHERE chrom = 'scaffold_1652' LIMIT 1") { result ->
+                result.next()
+		result.getString("chrom") shouldBe("scaffold_1652")
+		result.getInt("txstart") shouldBe 34728
+		result.getInt("txend") shouldBe 36737
+		result.getInt("exoncount") shouldBe 4
+		result.getString("exonstarts") shouldBe "{34728,35172,36451,36719}"
+            }
+
+        }
+
+        "a refGene file should import over HTTP" {
+
+            val server = MockWebServer()
+            server.start()
+            val baseUrl = server.url("").toString()
+            server.queueBytesFromResource("xenoRefGene.aplCal1.subsample.txt.gz")
+            val refGeneSource = UCSCRefSeqGeneHttpSource("aplCal1", false, "$baseUrl")
+            val refGeneImporter = RefSeqGeneImporter(listOf(refGeneSource))
+            runImporters(DB_URL, DB_USERNAME, dbSchema = TEST_SCHEMA, replaceSchema = true, importers = listOf(refGeneImporter))
+
+            checkQuery("SELECT COUNT(*) FROM refseq_gene_aplCal1") { result ->
+                result.next()
+                result.getInt(1) shouldBe 1000
+            }
+            checkQuery("SELECT * FROM refseq_gene_aplCal1 WHERE chrom = 'scaffold_1652' LIMIT 1") { result ->
+                result.next()
+		result.getString("chrom") shouldBe("scaffold_1652")
+		result.getInt("txstart") shouldBe 34728
+		result.getInt("txend") shouldBe 36737
+                result.getInt("exoncount") shouldBe 4
+		result.getString("exonstarts") shouldBe "{34728,35172,36451,36719}"
+            }
+
+        }
+
         "dm6 cytoband file should import over HTTP" {
 
             val server = MockWebServer()

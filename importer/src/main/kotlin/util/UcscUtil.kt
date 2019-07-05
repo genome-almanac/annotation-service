@@ -23,16 +23,28 @@ fun databaseUrl(ucscBaseUrl: String, assembly: String): String {
     return "$ucscBaseUrl/$assembly/database/"
 }
 
-fun requestUCSCCytoband(ucscBaseUrl: String, assembly: String): InputStream {
-    var assemblyUrl = databaseUrl(ucscBaseUrl, assembly)
-    var fileUrl = HttpUrl.parse("$assemblyUrl/cytoBand.txt.gz")!!.newBuilder().build()
-    var request = Request.Builder().url(fileUrl).get().build()
+fun requestUCSCFile(url: String): InputStream {
+    val fileUrl = HttpUrl.parse(url)!!.newBuilder().build()
+    val request = Request.Builder().url(fileUrl).get().build()
     return http.newCall(request).execute().body()!!.byteStream()
 }
 
+fun requestUCSCCytoband(ucscBaseUrl: String, assembly: String): InputStream {
+    val assemblyUrl = databaseUrl(ucscBaseUrl, assembly)
+    return requestUCSCFile("$assemblyUrl/cytoBand.txt.gz")
+}
+
 fun requestUCSCChromLengths(ucscBaseUrl: String, assembly: String): InputStream {
-    var assemblyUrl = databaseUrl(ucscBaseUrl, assembly)
-    var fileUrl = HttpUrl.parse("$assemblyUrl/chromInfo.txt.gz")!!.newBuilder().build()
-    var request = Request.Builder().url(fileUrl).get().build()
-    return http.newCall(request).execute().body()!!.byteStream()
+    val assemblyUrl = databaseUrl(ucscBaseUrl, assembly)
+    return requestUCSCFile("$assemblyUrl/chromInfo.txt.gz")
+}
+
+fun requestUCSCRefSeqGenes(ucscBaseUrl: String, assembly: String): InputStream {
+    val assemblyUrl = databaseUrl(ucscBaseUrl, assembly)
+    return requestUCSCFile("$assemblyUrl/refGene.txt.gz")
+}
+
+fun requestUCSCXenoRefSeqGenes(ucscBaseUrl: String, assembly: String): InputStream {
+    val assemblyUrl = databaseUrl(ucscBaseUrl, assembly)
+    return requestUCSCFile("$assemblyUrl/xenoRefGene.txt.gz")
 }

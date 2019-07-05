@@ -31,6 +31,8 @@ java -jar ../importer/build/annotations-importer-*.jar \
     --chrom-length-files test-resources/chromInfo.hg38.txt.gz \
     --chrom-length-file-assemblies hg38 \
     --assembly-files test-resources/downloads.html \
+    --ref-gene-files test-resources/xenoRefGene.aplCal1.subsample.txt.gz \
+    --ref-gene-file-assemblies aplCal1 \
     --replace-schema
 
 echo "Dependencies started successfully!"

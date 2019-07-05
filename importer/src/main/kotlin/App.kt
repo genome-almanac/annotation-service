@@ -50,6 +50,24 @@ class Cli : CliktCommand() {
             envvar = "CHROM_LENGTH_FILE_ASSEMBLIES",
 	    help = "Local chrom length file assemblies")
 	    .multiple()
+    private val refGeneFiles by option("--ref-gene-files",
+            envvar = "REF_GENE_FILES",
+	    help = "Local RefSeq gene files to import, with associated assemblies")
+	    .file(exists = true)
+	    .multiple()
+    private val refGeneFileAssemblies by option("--ref-gene-file-assemblies",
+            envvar = "REF_GENE_FILE_ASSEMBLIES",
+	    help = "Local ref gene assemblies")
+	    .multiple()
+    private val xenoRefSeqGeneFiles by option("--xeno-ref-gene-files",
+            envvar = "XENO_REF_GENE_FILES",
+	    help = "Local xeno RefSeq gene files to import, with associated assemblies")
+	    .file(exists = true)
+	    .multiple()
+    private val xenoRefSeqGeneFileAssemblies by option("--xeno-ref-gene-file-assemblies",
+            envvar = "XENO_REF_GENE_FILE_ASSEMBLIES",
+	    help = "Local xeno ref gene assemblies")
+	    .multiple()
     private val replaceSchema by option("--replace-schema", envvar = "REPLACE_SCHEMA",
             help = "Set to drop the given schema first before creating it again.")
             .flag(default = false)
@@ -98,6 +116,27 @@ class Cli : CliktCommand() {
             }
 	}
 	importers += ChromLengthImporter(chromLengthSources)
+
+        val refGeneSources = mutableListOf<RefSeqGeneSource>()
+        val refGeneSourcesX = mutableListOf<RefSeqGeneSource>()
+	for (assembly in assemblies) {
+	    refGeneSources += UCSCRefSeqGeneHttpSource(assembly)
+	    refGeneSourcesX += UCSCXenoRefSeqGeneHttpSource(assembly)
+	}
+	refGeneFiles.forEachIndexed { index, file ->
+	    refGeneSources += RefSeqGeneFileSource(refGeneFileAssemblies[index], file)
+	}
+	xenoRefSeqGeneFiles.forEachIndexed { index, file ->
+	    refGeneSourcesX += RefSeqGeneFileSource(xenoRefSeqGeneFileAssemblies[index], file)
+	}
+	databaseAssemblies.forEach { _, assemblies ->
+	    assemblies.forEach {
+	        refGeneSources += UCSCRefSeqGeneHttpSource(it["name"]!!, true)
+	        refGeneSourcesX += UCSCXenoRefSeqGeneHttpSource(it["name"]!!, true)
+            }
+	}
+	importers += RefSeqGeneImporter(refGeneSources)
+        importers += RefSeqGeneImporter(refGeneSourcesX, true)
 	
         runImporters(dbUrl, dbUsername, dbPassword, dbSchema, replaceSchema, importers)
 	
