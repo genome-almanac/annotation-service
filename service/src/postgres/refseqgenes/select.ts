@@ -8,8 +8,8 @@ SELECT bin, name, chrom, strand, txstart, txend, cdsstart cdsend, exoncount,
 `;
 
 export async function selectRefSeqGenes(assembly: string, parameters: RefSeqGeneParameters,
-					db: IDatabase<any>): Promise<RefSeqGeneResult[]> {
-    const tableName = "refseq_gene_" + assembly.toLowerCase();
+					db: IDatabase<any>, isxeno: boolean = false): Promise<RefSeqGeneResult[]> {
+    const tableName = "refseq_gene_" + assembly.toLowerCase() + (isxeno ? "_xeno" : "");
     const whereclause: string = ' ' + whereClause(refSeqGeneConditions(parameters, "refseq_gene_table"));
     const orderBy = " ORDER BY chrom, txstart";
     const limit: string = parameters.limit ? ` LIMIT ${parameters.limit}` : "";
