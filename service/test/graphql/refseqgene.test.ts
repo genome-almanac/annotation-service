@@ -63,63 +63,23 @@ describe("RefSeq gene query", () => {
 		    {
 			"exons":  [
 			    {
-				"UTRs":  [
-				    {
-					"coordinates":  {
-					    "chromosome": "scaffold_1652",
-					    "end": 34863,
-					    "start": 34632,
-					},
-				    },
-				],
+				"UTRs":  [],
 				"exon_number": 1,
 			    },
 			    {
-				"UTRs":  [
-				    {
-					"coordinates":  {
-					    "chromosome": "scaffold_1652",
-					    "end": 35195,
-					    "start": 35076,
-					},
-				    },
-				],
+				"UTRs":  [],
 				"exon_number": 2,
 			    },
 			    {
-				"UTRs":  [
-				    {
-					"coordinates":  {
-					    "chromosome": "scaffold_1652",
-					    "end": 35467,
-					    "start": 35447,
-					},
-				    },
-				],
+				"UTRs":  [],
 				"exon_number": 3,
 			    },
 			    {
-				"UTRs":  [
-				    {
-					"coordinates":  {
-					    "chromosome": "scaffold_1652",
-					    "end": 36154,
-					    "start": 35992,
-					},
-				    },
-				],
+				"UTRs":  [],
 				"exon_number": 4,
 			    },
 			    {
-				"UTRs":  [
-				    {
-					"coordinates":  {
-					    "chromosome": "scaffold_1652",
-					    "end": 36540,
-					    "start": 36322,
-					},
-				    },
-				],
+				"UTRs":  [],
 				"exon_number": 5,
 			    },
 			],
@@ -128,27 +88,11 @@ describe("RefSeq gene query", () => {
 		    {
 			"exons":  [
 			    {
-				"UTRs":  [
-				    {
-					"coordinates":  {
-					    "chromosome": "scaffold_2002",
-					    "end": 86899,
-					    "start": 86869,
-					},
-				    },
-				],
+				"UTRs":  [],
 				"exon_number": 1,
 			    },
 			    {
-				"UTRs":  [
-				    {
-					"coordinates":  {
-					    "chromosome": "scaffold_2002",
-					    "end": 86995,
-					    "start": 86944,
-					},
-				    },
-				],
+				"UTRs":  [],
 				"exon_number": 2,
 			    },
 			],

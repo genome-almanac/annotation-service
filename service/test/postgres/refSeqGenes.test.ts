@@ -24,7 +24,8 @@ describe("ref seq gene queries", async () => {
 	expect(results.length).toBe(1);
 	expect(results).toContainEqual({
 	    bin: 585,
-	    cdsend: 34632,
+	    cdsstart: 34632,
+	    cdsend: 36540,
 	    cdsendstat: "incmpl",
 	    cdsstartstat: "incmpl",
 	    chrom: "scaffold_1652",
@@ -50,7 +51,8 @@ describe("ref seq gene queries", async () => {
 	expect(results.length).toBe(2);
 	expect(results).toContainEqual({
 	    bin: 585,
-	    cdsend: 34632,
+	    cdsend: 36540,
+	    cdsstart: 34632,
 	    cdsendstat: "incmpl",
 	    cdsstartstat: "incmpl",
 	    chrom: "scaffold_1652",
