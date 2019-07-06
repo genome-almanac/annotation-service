@@ -8,7 +8,7 @@ SELECT chromosome, length
 
 export async function selectChromLengths(assembly: string, parameters: ChromLengthParameters,
 					 db: IDatabase<any>): Promise<ChromLengthResult[]> {
-    const tableName = "chrom_length_" + assembly;
+    const tableName = "chrom_length_" + assembly.toLowerCase();
     const whereclause: string = ' ' + whereClause(chromLengthConditions(parameters, "chrom_length_table"));
     const orderBy = " ORDER BY chromosome, length";
     const limit: string = parameters.limit ? ` LIMIT ${parameters.limit}` : "";

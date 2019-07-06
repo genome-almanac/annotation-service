@@ -8,7 +8,7 @@ SELECT chromosome, startcoordinate AS start, endcoordinate AS stop, bandname, st
 
 export async function selectCytobands(assembly: string, parameters: CytobandParameters,
 				      db: IDatabase<any>): Promise<CytobandResult[]> {
-    const tableName = "cytobands_" + assembly;
+    const tableName = "cytobands_" + assembly.toLowerCase();
     const whereclause: string = ' ' + whereClause(cytobandConditions(parameters, "cytoband_table"));
     const orderBy = " ORDER BY chromosome, startcoordinate";
     const limit: string = parameters.limit ? ` LIMIT ${parameters.limit}` : "";
