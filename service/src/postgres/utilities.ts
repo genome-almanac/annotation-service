@@ -6,12 +6,12 @@ function coordinateParameters(startname: string = "startcoordinate",
     return function(tableName: string): string {
 	return (
 	    "(("
-		+ tableName + "." + startname + " < ${" + tableName + ".coordinates.start} AND "
-		+ tableName + "." + endname + " > ${" + tableName + ".coordinates.start}) OR ("
-		+ tableName + "." + startname + " < ${" + tableName + ".coordinates.end} AND "
-		+ tableName + "." + endname + " > ${" + tableName + ".coordinates.end}) OR ("
-		+ tableName + "." + startname + " < ${" + tableName + ".coordinates.start} AND "
-		+ tableName + "." + endname + " > ${" + tableName + ".coordinates.end}))"
+		+ tableName + "." + startname + " <= ${" + tableName + ".coordinates.start} AND "
+		+ tableName + "." + endname + " >= ${" + tableName + ".coordinates.start}) OR ("
+		+ tableName + "." + startname + " <= ${" + tableName + ".coordinates.end} AND "
+		+ tableName + "." + endname + " >= ${" + tableName + ".coordinates.end}) OR ("
+		+ tableName + "." + startname + " >= ${" + tableName + ".coordinates.start} AND "
+		+ tableName + "." + endname + " <= ${" + tableName + ".coordinates.end}))"
 	);
     }
 }

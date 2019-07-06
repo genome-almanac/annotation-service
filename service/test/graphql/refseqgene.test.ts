@@ -58,7 +58,7 @@ describe("RefSeq gene query", () => {
 	expect(response.status).toBe(200);
 	expect(response.body.data.refseqgenes).toEqual([
             {
-		"id": "NM_001317114",
+		"id": "ZNF331",
 		"transcripts":  [
 		    {
 			"exons":  [
@@ -123,7 +123,7 @@ describe("RefSeq gene query", () => {
 				"exon_number": 5,
 			    },
 			],
-			"name": "NM_001317114",
+			"name": "ZNF331",
 		    },
 		    {
 			"exons":  [
@@ -152,7 +152,7 @@ describe("RefSeq gene query", () => {
 				"exon_number": 2,
 			    },
 			],
-			"name": "NM_001317114",
+			"name": "ZNF331",
 		    },
 		],
 	    },

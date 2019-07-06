@@ -55,6 +55,7 @@ class RefSeqGeneSink(dataSource: DataSource, assembly: String, isXeno: Boolean =
 		braceWrap(line[15])
             )
 	}
+	reader.close()
     }
 
     override fun close() {

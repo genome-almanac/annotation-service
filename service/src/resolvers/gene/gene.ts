@@ -52,7 +52,7 @@ function processTranscript(transcript: RefSeqGeneResult): TranscriptResult {
     }));
     return {
 	id: transcript.name,
-	name: transcript.name,
+	name: transcript.name2,
 	coordinates: {
 	    chromosome: transcript.chrom,
 	    start: transcript.txstart,
@@ -79,7 +79,7 @@ function refSeqGeneQueryGeneric(results: RefSeqGeneResult[]): GeneResult[] {
     const genes: { [id: string]: GeneResult } = {};
     results.forEach( (result: RefSeqGeneResult): void => {
 	if (genes[result.name] === undefined)
-	    genes[result.name] = { id: result.name, transcripts: [] };
+	    genes[result.name] = { id: result.name2, transcripts: [], strand: result.strand };
 	genes[result.name].transcripts.push(processTranscript(result));
     });
     return Object.keys(genes).map( (key: string): GeneResult => genes[key] );

@@ -66,7 +66,8 @@ const typeDefs = gql`
 
     type Gene {
         id: String!,
-        transcripts: [Transcript]!
+        transcripts: [Transcript]!,
+        strand: String!
     }
 
     type UTR {

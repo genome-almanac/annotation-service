@@ -3,6 +3,7 @@ import { GenomicRange } from '../../types';
 export interface GeneResult {
     id: string;
     transcripts: TranscriptResult[];
+    strand: string;
 };
 
 export interface TranscriptResult {

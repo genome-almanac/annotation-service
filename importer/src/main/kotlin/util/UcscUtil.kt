@@ -15,7 +15,7 @@ const val UCSC_BASE_URL = "http://hgdownload.cse.ucsc.edu/goldenPath/"
 private val http by lazy {
     OkHttpClient.Builder()
             .connectTimeout(20, TimeUnit.SECONDS)
-            .readTimeout(20, TimeUnit.SECONDS)
+            .readTimeout(200, TimeUnit.SECONDS)
             .build()
 }
 
