@@ -27,9 +27,9 @@ const typeDefs = gql`
         cytoband(assembly: String!, chromosome: String, coordinates: GenomicRangeInput,
                  stain: [String], bandname: [String], limit: Int, offset: Int): [Cytoband],
         assemblies(name: String, species: String, description: String, searchTerm: String): [Assembly],
-        chromlengths(assembly: String!, chromosome: String, minLength: Int, maxLength: Int): [ChromLength],
-        refseqgenes(assembly: String!, chromosome: String, coordinates: GenomicRangeInput, searchTerm: String): [Gene],
-        refseqxenogenes(assembly: String!, chromosome: String, coordinates: GenomicRangeInput, searchTerm: String): [Gene]
+        chromlengths(assembly: String!, chromosome: String, minLength: Int, maxLength: Int, limit: Int, offset: Int): [ChromLength],
+        refseqgenes(assembly: String!, chromosome: String, coordinates: GenomicRangeInput, searchTerm: String, limit: Int, offset: Int): [Gene],
+        refseqxenogenes(assembly: String!, chromosome: String, coordinates: GenomicRangeInput, searchTerm: String, limit: Int, offset: Int): [Gene]
     }
 
     type Assembly {

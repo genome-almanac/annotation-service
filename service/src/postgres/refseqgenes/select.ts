@@ -3,7 +3,7 @@ import { RefSeqGeneParameters, RefSeqGeneResult } from '../types';
 import { whereClause, refSeqGeneConditions } from '../utilities';
 
 const SELECT = `
-SELECT bin, name, chrom, strand, txstart, txend, cdsstart cdsend, exoncount,
+SELECT bin, name, chrom, strand, txstart, txend, cdsstart, cdsend, exoncount,
        exonstarts, exonends, score, name2, cdsstartstat, cdsendstat, exonframes
 `;
 
