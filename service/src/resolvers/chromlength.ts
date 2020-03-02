@@ -1,5 +1,3 @@
-import DataLoader from 'dataloader';
-
 import { db, selectChromLengths } from '../postgres';
 import { ChromLengthParameters, ChromLengthResult } from '../postgres/types';
 
@@ -7,8 +5,6 @@ async function chromLengthQuery(obj: any, parameters: ChromLengthParameters | an
     return selectChromLengths(parameters.assembly, parameters, db);
 }
 
-export const chromLengthResolvers = {
-    Query: {
+export const chromLengthQueries = {
 	chromlengths: chromLengthQuery
-    }
 };

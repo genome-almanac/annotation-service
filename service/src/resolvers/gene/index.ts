@@ -1,2 +1,2 @@
-import { geneResolvers } from './gene';
-export { geneResolvers };
+import { geneQueries } from './gene';
+export { geneQueries };

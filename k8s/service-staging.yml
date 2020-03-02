@@ -76,32 +76,15 @@ spec:
   selector:
     app: annotations-service
 ---
-apiVersion: certmanager.k8s.io/v1alpha1
-kind: Certificate
-metadata:
-  name: staging-annotations-tls
-  namespace: default
-spec:
-  secretName: annotations-tls
-  issuerRef:
-    name: letsencrypt
-    kind: ClusterIssuer
-  commonName: annotations.staging.wenglab.org
-  dnsNames:
-  - annotations.staging.wenglab.org
-  acme:
-    config:
-    - http01:
-        ingress: annotations-ingress
-      domains:
-      - annotations.staging.wenglab.org
----
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: annotations-ingress
   annotations:
     kubernetes.io/ingress.global-static-ip-name: "staging-annotations-external-ip"
+    cert-manager.io/cluster-issuer: letsencrypt
+    acme.cert-manager.io/http01-edit-in-place: "true"
+    cert-manager.io/issue-temporary-certificate: "true"
 spec:
   backend:
     serviceName: annotations-service-service

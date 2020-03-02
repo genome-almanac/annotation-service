@@ -1,8 +1,6 @@
-import { gql, makeExecutableSchema } from 'apollo-server-express';
-import { cytobandResolvers } from '../resolvers/cytoband';
-import { assemblyResolvers } from '../resolvers/assembly';
-import { chromLengthResolvers } from '../resolvers/chromlength';
-import { geneResolvers } from '../resolvers/gene';
+import { gql } from 'apollo-server-express';
+import { buildFederatedSchema } from "@apollo/federation";
+import { resolvers } from "./resolvers";
 
 const typeDefs = gql`
     type Cytoband {
@@ -77,7 +75,4 @@ const typeDefs = gql`
 
 `;
 
-export const schema = makeExecutableSchema({
-    typeDefs,
-    resolvers: [cytobandResolvers, assemblyResolvers, chromLengthResolvers, geneResolvers]
-});
+export const schema = buildFederatedSchema([{ typeDefs, resolvers }]);
