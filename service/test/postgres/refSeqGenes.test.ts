@@ -1,6 +1,6 @@
 import { db, selectRefSeqGenes, RefSeqGeneParameters } from '../../src/postgres';
 
-describe("ref seq gene queries", async () => {
+describe("ref seq gene queries", () => {
 
     test("should select 7 genes from scaffold_1652", async () => {
 	const parameters: RefSeqGeneParameters = {
