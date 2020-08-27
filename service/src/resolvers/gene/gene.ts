@@ -1,6 +1,3 @@
-import DataLoader from 'dataloader';
-
-import { GenomicRange } from '../../types';
 import { db, selectRefSeqGenes } from '../../postgres';
 import { RefSeqGeneParameters, RefSeqGeneResult } from '../../postgres/types';
 import { UTRResult, ExonResult, TranscriptResult, GeneResult } from './types';
