@@ -6,5 +6,5 @@ async function assemblyQuery(obj: any, parameters: AssemblyParameters | any): Pr
 }
 
 export const assemblyQueries = {
-	assemblies: assemblyQuery
+	genomicAssemblies: assemblyQuery
 };

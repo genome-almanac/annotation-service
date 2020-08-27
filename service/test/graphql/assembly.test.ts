@@ -3,7 +3,7 @@ import app from '../../src/app';
 
 const query = `
   query Assemblies($name: String, $description: String, $species: String, $searchTerm: String) {
-    assemblies(name: $name, description: $description, species: $species, searchTerm: $searchTerm) {
+    genomicAssemblies(name: $name, description: $description, species: $species, searchTerm: $searchTerm) {
         name,
         species,
         description
@@ -19,8 +19,8 @@ describe("assemblies query", () => {
 	};
 	const response: Response = await request(app).post("/graphql").send({ query, variables });
 	expect(response.status).toBe(200);
-	expect(response.body.data.assemblies.length).toBe(1);
-	expect(response.body.data.assemblies).toContainEqual({
+	expect(response.body.data.genomicAssemblies.length).toBe(1);
+	expect(response.body.data.genomicAssemblies).toContainEqual({
 	    description: "Dec. 2013 (GRCh38/hg38)",
 	    name: "hg38",
 	    species: "Human"
@@ -33,7 +33,7 @@ describe("assemblies query", () => {
 	};
 	const response: Response = await request(app).post("/graphql").send({ query, variables });
 	expect(response.status).toBe(200);
-	expect(response.body.data.assemblies).toEqual([
+	expect(response.body.data.genomicAssemblies).toEqual([
 	    {
 		name: 'dm1',
 		species: 'D. melanogaster',
@@ -62,7 +62,7 @@ describe("assemblies query", () => {
 	    description: 'Aug. 2014 (BDGP Release 6 + ISO1 MT/dm6)'
 	};
 	const response: Response = await request(app).post("/graphql").send({ query, variables });
-	expect(response.body.data.assemblies).toEqual([
+	expect(response.body.data.genomicAssemblies).toEqual([
             {
 		name: 'dm6',
 		species: 'D. melanogaster',
@@ -76,7 +76,7 @@ describe("assemblies query", () => {
 	    searchTerm: "mouse"
 	};
 	const response: Response = await request(app).post("/graphql").send({ query, variables });
-	expect(response.body.data.assemblies).toEqual([
+	expect(response.body.data.genomicAssemblies).toEqual([
 	    {
 		name: 'micMur1',
 		species: 'Mouse lemur',
