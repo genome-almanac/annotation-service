@@ -4,6 +4,12 @@ import { resolvers } from "./resolvers";
 
 const typeDefs = gql`
     
+    interface GenomicObject {
+        id: String!
+        assembly: String!
+        coordinates: GenomicRange!
+    }
+
     type Cytoband {
         coordinates: GenomicRange!
         bandname: String!
@@ -23,6 +29,7 @@ const typeDefs = gql`
     }
 
     type Query {
+
         cytoband(
             assembly: String!
             chromosome: String
@@ -31,11 +38,28 @@ const typeDefs = gql`
             bandname: [String]
             limit: Int
             offset: Int
-        ): [Cytoband],
-        genomicAssemblies(name: String, species: String, description: String, searchTerm: String): [GenomicAssembly],
-        chromlengths(assembly: String!, chromosome: String, minLength: Int, maxLength: Int, limit: Int, offset: Int): [ChromLength],
-        refseqgenes(assembly: String!, chromosome: String, coordinates: GenomicRangeInput, searchTerm: String, limit: Int, offset: Int): [RefSeqGene],
+        ): [Cytoband]
+
+        resolve(
+            id: String!
+            assembly: String!
+            limit: Int
+        ): [GenomicObject!]!
+
+        suggest(
+            id: String!
+            assembly: String!
+            limit: Int
+        ): [GenomicObject!]!
+
+        genomicAssemblies(name: String, species: String, description: String, searchTerm: String): [GenomicAssembly]
+
+        chromlengths(assembly: String!, chromosome: String, minLength: Int, maxLength: Int, limit: Int, offset: Int): [ChromLength]
+
+        refseqgenes(assembly: String!, chromosome: String, coordinates: GenomicRangeInput, searchTerm: String, limit: Int, offset: Int): [RefSeqGene]
+
         refseqxenogenes(assembly: String!, chromosome: String, coordinates: GenomicRangeInput, searchTerm: String, limit: Int, offset: Int): [RefSeqGene]
+
     }
 
     type GenomicAssembly {
