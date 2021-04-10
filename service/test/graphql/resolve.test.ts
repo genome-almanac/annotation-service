@@ -30,18 +30,6 @@ describe("resolve query", () => {
 		});
     });
 
-	test("should return chr1 from hg38", async () => {
-		const variables = {
-			id: "chr1:1000000-",
-			assembly: "hg38"
-		};
-		const response: Response = await request(app).post("/graphql").send({ query, variables });
-		expect(response.status).toBe(200);
-		expect(response.body.data.suggest).toContainEqual({
-			id: "chr1:1000000-2000000"
-		});
-    });
-
 	test("should not resolve a coordinate out of range on chr1 from hg38", async () => {
 		const variables = {
 			id: "chr1:1000000000-2000000000",
