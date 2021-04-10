@@ -22,6 +22,12 @@ const typeDefs = gql`
         end: Int!
     }
 
+    type GenomicCoordinateRange implements GenomicObject {
+        id: String!
+        assembly: String!
+        coordinates: GenomicRange!
+    }
+
     input GenomicRangeInput {
         chromosome: String!
         start: Int!

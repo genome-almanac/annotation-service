@@ -1,9 +1,9 @@
-import { IMain, IDatabase, IOptions } from "pg-promise";
+import { IMain, IDatabase, IInitOptions } from "pg-promise";
 import pgPromise from "pg-promise";
 
 const schema = process.env["POSTGRES_SCHEMA"];
 
-const initOptions: IOptions<{}> = {
+const initOptions: IInitOptions<{}> = {
     schema,
     error(err, e) {
         if (e.cn) {

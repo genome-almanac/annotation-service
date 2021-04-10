@@ -25,11 +25,11 @@ export function matchGenomicCoordinate(match: RegExpMatchArray | null): GenomicR
     const start = parseCoordinate(match, 'start');
     const end = parseCoordinate(match, 'end');
     if (match?.groups === undefined ||
-        match.groups.chromosome !== undefined ||
-        match.groups.start !== undefined ||
-        match.groups.end !== undefined ||
-        !isNaN(start) && start > 0 ||
-        !isNaN(end) && end > 0) return null;
+        match.groups.chromosome === undefined ||
+        match.groups.start === undefined ||
+        match.groups.end === undefined ||
+        isNaN(start) && start <= 0 ||
+        isNaN(end) && end <= 0) return null;
     return {
         chromosome: match.groups!.chromosome,
         start,
@@ -47,9 +47,10 @@ export function matchPartialGenomicCoordinate(match: RegExpMatchArray | null): P
     const start = parseCoordinate(match, 'start');
     const end = parseCoordinate(match, 'end');
     if (match?.groups === undefined ||
-        match.groups.chromosome !== undefined ||
-        match.groups.start !== undefined ||
-        !isNaN(start) && start > 0) return null;
+        match.groups.chromosome === undefined ||
+        match.groups.start === undefined ||
+        match.groups.end === undefined ||
+        isNaN(start) && start <= 0) return null;
     return {
         chromosome: match.groups!.chromosome,
         start,
@@ -59,6 +60,10 @@ export function matchPartialGenomicCoordinate(match: RegExpMatchArray | null): P
 
 export function matchGenomicRegion(region: string): RegExpMatchArray | null {
     return /(?<chromosome>[A-Za-z0-9_]+)[:\t ](?<start>[0-9]+)[-\t ](?<end>[0-9]+)/g.exec(region.replace(/,/g, ''));
+}
+
+export function matchPartialGenomicRegion(region: string): RegExpMatchArray | null {
+    return /(?<chromosome>[A-Za-z0-9_]+)[:\t ]*(?<start>[0-9]+)?[-\t ]*(?<end>[0-9]+)?/g.exec(region.replace(/,/g, ''));
 }
 
 function formatObject(x: GenomicRange, __typename: string, assembly: string): GenomicObject {
@@ -80,16 +85,16 @@ const resolveQuery: GraphQLFieldResolver<{}, {}, ResolveParameters> = async (_, 
     if (!coordinates) return [];
     const length = await selectChromLengths(args.assembly!, { chromosome: coordinates.chromosome!, assembly: args.assembly! }, db);
     if (length.length === 0) return [];
-    return length[0].length >= coordinates.end ? [ formatObject(coordinates, "GenomicRange", args.assembly!) ] : [];
+    return length[0].length >= coordinates.end ? [ formatObject(coordinates, "GenomicCoordinateRange", args.assembly!) ] : [];
 };
 
 const suggestQuery: GraphQLFieldResolver<{}, {}, ResolveParameters> = async (_, args): Promise<GenomicObject[]> => {
-    const coordinates = matchPartialGenomicCoordinate(matchGenomicRegion(args.id || ""));
+    const coordinates = matchPartialGenomicCoordinate(matchPartialGenomicRegion(args.id || ""));
     if (!coordinates) return [];
     const length = await selectChromLengths(args.assembly!, { chromosome: coordinates.chromosome!, assembly: args.assembly! }, db);
     if (length.length === 0 || length[0].length < coordinates.start) return [];
     if (!coordinates.end || coordinates.end < coordinates.start) coordinates.end = Math.min(length[0].length, coordinates.start + 1000000);
-    return [ formatObject(coordinates as GenomicRange, "GenomicRange", args.assembly!) ];
+    return [ formatObject(coordinates as GenomicRange, "GenomicCoordinateRange", args.assembly!) ];
 };
 
 export const resolveQueries = {
